@@ -1,0 +1,19 @@
+{
+  "name": "employee-attendance-management",
+  "version": "1.0.0",
+  "description": "An employee attendance management app for danfoss",
+  "main": "index.js",
+  "scripts": {
+    "server": "nodemon server.js"
+  },
+  "author": "Rohan Keskar",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
+    "xlsx": "^0.15.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.2"
+  }
+}
