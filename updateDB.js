@@ -5,125 +5,165 @@ const fileName = process.argv[2];
 const wb = xlsx.readFile(fileName, { cellDates: true });
 
 const employeeData = {};
+const dates = [];
 
-for(sheet in wb.Sheets){
+function pushIntoArr(cell, array, empCode) {
+  var valueToPush = "";
+  if (cell == undefined) {
+    valueToPush = "NA";
+  } else {
+    valueToPush = cell.w;
+  }
 
-  
-  
-  
- 
-  
-  
+  switch (array) {
+    case 1:
+      employeeData[empCode].InTime.push(valueToPush);
+      break;
+    case 2:
+      employeeData[empCode].OutTime.push(valueToPush);
+      break;
+    case 3:
+      employeeData[empCode].TotalTime.push(valueToPush);
+      break;
+    default:
+      break;
+  }
 }
 
+for (sheet in wb.Sheets) {
+  const ws = wb.Sheets[sheet];
 
-const ws = wb.Sheets["BasicWorkDurationReport"];
-
+  var empCode = "";
+  var empName = "";
   var sheet2arr = function(sheet) {
-    var result = [];
-    var row;
     var rowNum;
     var colNum;
-    
-    var range = xlsx.utils.decode_range(sheet["!ref"]);
-    for (rowNum = range.s.r; rowNum <= range.e.r; rowNum++) {
-      const currentRow = sheet[xlsx.utils.encode_cell({ r: rowNum, c: 0 })];
-  
-      row = [];
-      for (colNum = range.s.c; colNum <= range.e.c; colNum++) {
-        var nextCell = sheet[xlsx.utils.encode_cell({ r: rowNum, c: colNum })];
-        var forwardCell = sheet[xlsx.utils.encode_cell({r: rowNum, c: colNum + 1})]
-        var prevCell = sheet[xlsx.utils.encode_cell({r: rowNum, c: colNum - 1})]
-        
-        if (nextCell === undefined ) {
-          //console.log(nextCell,prevCell);
-          if (typeof currentRow !== "undefined") {
-            if (
-              currentRow.v == "Status" ||
-              currentRow.v == "InTime" ||
-              currentRow.v == "OutTime"
-            ) {
-              //console.log(prevCell);
-              if(currentRow.v == "Status"){
-                if(prevCell != undefined){
+    const columnsToCheck = [];
 
-                }
-                else{
-                  row.push("NA");
-                }
+    var range = xlsx.utils.decode_range(sheet["!ref"]);
+
+    if (dates.length == 0) {
+      for (rowNum = range.s.r; rowNum <= 10; rowNum++) {
+        for (colNum = range.s.c; colNum <= range.e.c; colNum++) {
+          const currentCell =
+            sheet[xlsx.utils.encode_cell({ r: rowNum, c: colNum })];
+          if (currentCell !== undefined) {
+            const date = currentCell.w;
+
+            if (date.includes("To")) {
+              const duration = date.split("To");
+              const from = new Date(duration[0].trim());
+              from.setDate(from.getDate() + 1);
+              const to = new Date(duration[1].trim());
+              to.setDate(to.getDate() + 1);
+              for (var i = from; i <= to; i.setDate(from.getDate() + 1)) {
+                dates.push(new Date(i));
               }
-              else{
-                if(nextCell == undefined && prevCell == undefined)
-                row.push("NA")
-              }
-              
             }
           }
-        } else {
-          
-          row.push(nextCell.w);
         }
       }
-      if (row.length == 0) {
-      } else result.push(row);
     }
-    return result;
+
+    for (rowNum = range.s.r; rowNum <= range.e.r; rowNum++) {
+      const currentRow = sheet[xlsx.utils.encode_cell({ r: rowNum, c: 0 })];
+
+      if (currentRow != undefined) {
+        if (currentRow.v == "Days") {
+          for (var j = range.s.c + 2; j <= range.e.c; j++) {
+            const columnCell =
+              sheet[xlsx.utils.encode_cell({ r: rowNum, c: j })];
+            if (columnCell != undefined) {
+              columnsToCheck.push(j);
+            }
+          }
+        }
+
+        if (currentRow.v == "Emp. Code :") {
+          empCode = sheet[xlsx.utils.encode_cell({ r: rowNum, c: 3 })].w;
+          for (var i = 3; i <= range.e.c; i++) {
+            const currentCell =
+              sheet[xlsx.utils.encode_cell({ r: rowNum, c: i })];
+            if (currentCell != undefined) {
+              if (currentCell.w.includes("Emp.  Name :")) {
+                for (var j = i; j <= range.e.c; j++) {
+                  var nameCell =
+                    sheet[xlsx.utils.encode_cell({ r: rowNum, c: j })];
+                  if (nameCell != undefined) {
+                    empName = nameCell.w;
+                  }
+                }
+              }
+            }
+          }
+
+          if (employeeData[empCode] == undefined) {
+            const employee = {
+              EmpCode: empCode,
+              EmpName: empName.replace("  ", " "),
+              Status: [],
+              InTime: [],
+              OutTime: [],
+              TotalTime: []
+            };
+            employeeData[empCode] = employee;
+          }
+        }
+      }
+
+      for (colNum = range.s.c; colNum <= range.e.c; colNum++) {
+        var nextCell = sheet[xlsx.utils.encode_cell({ r: rowNum, c: colNum })];
+
+        if (columnsToCheck.includes(colNum)) {
+          if (nextCell == undefined) {
+            if (currentRow != undefined) {
+              if (currentRow.v == "Status") {
+                if (colNum != 0 && colNum != 1) {
+                  employeeData[empCode].Status.push("NA");
+                  rowNum++;
+                  const inTimeCell =
+                    sheet[xlsx.utils.encode_cell({ r: rowNum, c: colNum })];
+                  pushIntoArr(inTimeCell, 1, empCode);
+                  rowNum++;
+                  const outTimeCell =
+                    sheet[xlsx.utils.encode_cell({ r: rowNum, c: colNum })];
+                  pushIntoArr(outTimeCell, 2, empCode);
+                  rowNum++;
+                  const totalTimeCell =
+                    sheet[xlsx.utils.encode_cell({ r: rowNum, c: colNum })];
+                  pushIntoArr(totalTimeCell, 3, empCode);
+                  rowNum -= 3;
+                }
+              }
+            }
+          } else {
+            if (currentRow != undefined) {
+              if (currentRow.v == "Status") {
+                if (colNum != 0 && colNum != 1) {
+                  employeeData[empCode].Status.push(nextCell.w);
+
+                  rowNum++;
+
+                  const inTimeCell =
+                    sheet[xlsx.utils.encode_cell({ r: rowNum, c: colNum })];
+                  pushIntoArr(inTimeCell, 1, empCode);
+                  rowNum++;
+                  const outTimeCell =
+                    sheet[xlsx.utils.encode_cell({ r: rowNum, c: colNum })];
+                  pushIntoArr(outTimeCell, 2, empCode);
+                  rowNum++;
+                  const totalTimeCell =
+                    sheet[xlsx.utils.encode_cell({ r: rowNum, c: colNum })];
+                  pushIntoArr(totalTimeCell, 3, empCode);
+                  rowNum -= 3;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   };
-  
 
-  
-  const arr = sheet2arr(ws);
-  
-  const dates = [];
-  
-  const dateDuration = arr[1][0].split("To");
-  const from = new Date(dateDuration[0]);
-  const to = new Date(dateDuration[1]);
-  
-  from.setDate(from.getDate() + 1);
-  to.setDate(to.getDate() + 1);
-  
-  for (var i = from; i <= to; i.setDate(i.getDate() + 1)) {
-    dates.push(new Date(i));
-  }
-  
-  
-  
-  
-  for (var i = 0; i < arr.length; i++) {
-    if (arr[i][0] == "Emp. Code :") {
-      const employee = {
-        EmpCode: arr[i][1],
-        EmpName: arr[i][3].replace("  ", " "),
-        Status: [],
-        InTime: [],
-        OutTime: [],
-        Dates: dates
-      };
-      if (employeeData[arr[i][1]] === undefined)
-        employeeData[arr[i][1]] = employee;
-    } else if (arr[i][0] == "Status") {
-      const empCode = arr[i - 1][1];
-  
-      for (var j = 0; j < dates.length; j++) {
-        
-        employeeData[empCode].Status.push(arr[i][j + 1]);
-      }
-    } else if (arr[i][0] == "InTime") {
-      const empCode = arr[i - 2][1];
-  
-      for (var j = 0; j < dates.length; j++) {
-        employeeData[empCode].InTime.push(arr[i][j + 1]);
-      }
-    } else if (arr[i][0] == "OutTime") {
-      const empCode = arr[i - 3][1];
-  
-      for (var j = 0; j < dates.length; j++) {
-        employeeData[empCode].OutTime.push(arr[i][j + 1]);
-      }
-    }
-  }
-  
-
- // console.log(arr);
- console.log(employeeData["E0428"]);
+  sheet2arr(ws);
+}
