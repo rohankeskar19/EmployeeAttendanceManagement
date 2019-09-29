@@ -1,4 +1,5 @@
 const xlsx = require("xlsx");
+const mysql = require("mysql");
 
 const fileName = process.argv[2];
 
@@ -35,7 +36,7 @@ for (sheet in wb.Sheets) {
 
   var empCode = "";
   var empName = "";
-  var sheet2arr = function(sheet) {
+  var processSheet = function(sheet) {
     var rowNum;
     var colNum;
     const columnsToCheck = [];
@@ -57,7 +58,12 @@ for (sheet in wb.Sheets) {
               const to = new Date(duration[1].trim());
               to.setDate(to.getDate() + 1);
               for (var i = from; i <= to; i.setDate(from.getDate() + 1)) {
-                dates.push(new Date(i));
+                dates.push(
+                  new Date(i)
+                    .toISOString()
+                    .slice(0, 19)
+                    .replace("T", " ")
+                );
               }
             }
           }
@@ -164,6 +170,40 @@ for (sheet in wb.Sheets) {
       }
     }
   };
+  console.log("Processing sheet");
+  processSheet(ws);
+  console.log("Processed data from sheet");
+  const con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "root",
+    database: "danfoss"
+  });
 
-  sheet2arr(ws);
+  con.connect(err => {
+    if (err) console.log(err);
+    else {
+      console.log("Connected to databse");
+      console.log("Inserting data into database");
+      for (i in employeeData) {
+        const employee = employeeData[i];
+
+        const EmpCode = i;
+        const Status = employee.Status;
+        const InTime = employee.InTime;
+        const OutTime = employee.OutTime;
+        const TotalTime = employee.TotalTime;
+
+        for (var j = 0; j < dates.length; j++) {
+          var sql = `INSERT INTO attendance values ('${EmpCode}','${Status[j]}','${InTime[j]}','${OutTime[j]}','${TotalTime[j]}','${dates[j]}')`;
+          con.query(sql, (err, result) => {
+            if (err) console.log(err);
+          });
+        }
+      }
+
+      con.end();
+      console.log("Done");
+    }
+  });
 }
