@@ -84,7 +84,7 @@ Router.post("/register", authentication.isAdmin, (req, res) => {
 // Params: employee_code,password
 Router.post("/login", (req, res) => {
   const { employee_code, password } = req.body;
-
+  console.log(req.body);
   const errors = validator.validateLoginInput(employee_code, password);
 
   if (Object.keys(errors).length > 0) {
@@ -134,7 +134,7 @@ Router.post("/login", (req, res) => {
                   } else {
                     return res
                       .status(401)
-                      .json({ error: "Passwords do not match" });
+                      .json({ password: "Passwords do not match" });
                   }
                 } else {
                   console.log(err);
@@ -214,9 +214,9 @@ Router.post("/change-password", (req, res) => {
                         }
                       );
                     } else {
-                      return res
-                        .status(401)
-                        .json({ error: "Your current password is incorrect" });
+                      return res.status(401).json({
+                        current_password: "Your current password is incorrect"
+                      });
                     }
                   } else {
                     return res
@@ -226,7 +226,9 @@ Router.post("/change-password", (req, res) => {
                 }
               );
             } else {
-              return res.status(404).json({ error: "User does not exists" });
+              return res
+                .status(404)
+                .json({ employee_code: "User does not exists" });
             }
           } else {
             return res

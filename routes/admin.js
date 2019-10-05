@@ -2,6 +2,7 @@ const Router = require("express").Router();
 
 const pool = require("../helpers/mysql");
 const validator = require("../validators/employee");
+const adminValidator = require("../validators/admin");
 const authentication = require("../helpers/authentication");
 
 // Route: /api/admin/attendance
@@ -9,7 +10,7 @@ const authentication = require("../helpers/authentication");
 // Method: GET
 // Params: from_date,to_date
 Router.get("/attendance", authentication.isAdmin, (req, res) => {
-  const { from_date, to_date } = req.params;
+  const { from_date, to_date } = req.query;
 
   const errors = validator.validateAttendanceInput(from_date, to_date);
 
@@ -18,7 +19,7 @@ Router.get("/attendance", authentication.isAdmin, (req, res) => {
   } else {
     pool.getConnection((err, con) => {
       if (!err) {
-        const sql = `SELECT * FROM attendance WHERE AttendanceDate >= '${from_date}' AND AttendanceDate <= '${to_date}' SORT BY EmpCode`;
+        const sql = `SELECT * FROM attendance WHERE AttendanceDate >= '${from_date}' AND AttendanceDate <= '${to_date}' ORDER BY EmpCode`;
 
         con.query(sql, (err, result) => {
           if (!err) {
@@ -34,6 +35,7 @@ Router.get("/attendance", authentication.isAdmin, (req, res) => {
             }
             return res.json(response);
           } else {
+            console.log(err);
             return res
               .status(500)
               .json({ error: "Failed to process request try again" });
@@ -49,14 +51,85 @@ Router.get("/attendance", authentication.isAdmin, (req, res) => {
   }
 });
 
-// Route: /api/admin/employees
+// Route: /api/admin/search-employees
 // Access: Admin
 // Method: GET
 // Params: employee_code
+Router.get("/search-employees", authentication.isAdmin, (req, res) => {
+  const { employee_code } = req.query;
+  console.log(req.query);
+  const errors = adminValidator.validateEmployeeCode(employee_code);
+
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json(errors);
+  } else {
+    if (req.user.EmpCode == employee_code) {
+      return res.json({});
+    } else {
+      pool.getConnection((err, con) => {
+        if (!err) {
+          const sql = `SELECT EmpCode,EmpName,Access FROM employees WHERE EmpCode = '${employee_code}'`;
+
+          con.query(sql, (err, result) => {
+            if (!err) {
+              if (result.length > 0) {
+                var employeeData = {};
+                Object.assign(employeeData, result[0]);
+                delete employeeData["Password"];
+                return res.json(employeeData);
+              } else {
+                return res.status(404).json({ error: "User does not exists" });
+              }
+            } else {
+              return res
+                .status(500)
+                .json({ error: "Failed to process request try again" });
+            }
+          });
+        } else {
+          return res
+            .status(500)
+            .json({ error: "Failed to process request try again" });
+        }
+        con.release();
+      });
+    }
+  }
+});
 
 // Route: /api/admin/add-admin
 // Access: Admin
 // Method: PUT
 // Params: employee_code
+Router.put("/add-admin", authentication.isAdmin, (req, res) => {
+  const { employee_code } = req.query;
+
+  const errors = adminValidator.validateEmployeeCode(employee_code);
+
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json(errors);
+  } else {
+    pool.getConnection((err, con) => {
+      if (!err) {
+        const sql = `UPDATE employees SET Access = 'admin' WHERE EmpCode = '${employee_code}'`;
+        con.query(sql, (err, result) => {
+          if (!err) {
+            return res.json({ message: "Success" });
+          } else {
+            return res
+              .status(500)
+              .json({ error: "Failed to process reques try agian" });
+          }
+        });
+      } else {
+        return res
+          .status(500)
+          .json({ error: "Failed to process request try again" });
+      }
+
+      con.release();
+    });
+  }
+});
 
 module.exports = Router;

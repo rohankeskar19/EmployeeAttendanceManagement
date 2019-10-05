@@ -9,7 +9,7 @@ const authentication = require("../helpers/authentication");
 // Params: from_date,to_date
 Router.get("/attendance", authentication.isAuthenticated, (req, res) => {
   const { from_date, to_date } = req.query;
-
+  console.log(req.query);
   const errors = validator.validateAttendanceInput(from_date, to_date);
 
   if (Object.keys(errors).length > 0) {

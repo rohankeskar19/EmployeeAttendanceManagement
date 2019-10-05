@@ -4,7 +4,9 @@
   "description": "An employee attendance management app for danfoss",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon server.js"
+    "server": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Rohan Keskar",
   "license": "ISC",
@@ -16,6 +18,7 @@
     "xlsx": "^0.15.1"
   },
   "devDependencies": {
+    "concurrently": "^4.1.2",
     "nodemon": "^1.19.2"
   }
 }
