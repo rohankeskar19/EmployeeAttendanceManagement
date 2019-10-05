@@ -54,7 +54,9 @@ for (sheet in wb.Sheets) {
             if (date.includes("To")) {
               const duration = date.split("To");
               const from = new Date(duration[0].trim());
+
               from.setDate(from.getDate() + 1);
+
               const to = new Date(duration[1].trim());
               to.setDate(to.getDate() + 1);
               for (var i = from; i <= to; i.setDate(from.getDate() + 1)) {
@@ -63,6 +65,7 @@ for (sheet in wb.Sheets) {
                     .toISOString()
                     .slice(0, 19)
                     .replace("T", " ")
+                    .split(" ")[0]
                 );
               }
             }

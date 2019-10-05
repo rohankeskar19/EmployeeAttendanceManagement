@@ -26,7 +26,7 @@ Router.get("/attendance", authentication.isAuthenticated, (req, res) => {
             for (var i = 0; i < result.length; i++) {
               var attendance = {};
               const date = new Date(result[i].AttendanceDate);
-              date.setDate(date.getDate() + 1);
+              date.setDate(date.getDate());
               result[i].AttendanceDate = date;
               Object.assign(attendance, result[i]);
               response.push(attendance);

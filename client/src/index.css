@@ -13,7 +13,7 @@ body {
 .Login {
   width: 40%;
   position: absolute;
-  top: 30vh;
+  top: 25vh;
   left: 30%;
 }
 
@@ -35,7 +35,7 @@ button {
 .ChangePassword {
   width: 40%;
   position: absolute;
-  top: 23vh;
+  top: 20vh;
   left: 30%;
 }
 
