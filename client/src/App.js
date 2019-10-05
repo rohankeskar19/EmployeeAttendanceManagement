@@ -12,6 +12,7 @@ import store from "./store";
 import { LOGOUT_USER, LOGIN_USER } from "./actions/types";
 import EmployeeRoutes from "./components/EmployeeRoutes";
 import AdminRoutes from "./components/AdminRoutes";
+import Notification from "./components/Notification";
 
 class App extends Component {
   componentDidMount() {
@@ -53,6 +54,7 @@ class App extends Component {
           <EmployeeRoutes path="/dashboard" component={Dashboard} exact />
           <AdminRoutes path="/admin" component={Admin} exact />
         </Switch>
+        {/* <Notification /> */}
       </div>
     );
   }

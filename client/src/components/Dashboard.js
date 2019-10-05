@@ -12,6 +12,34 @@ class Dashboard extends Component {
     error: ""
   };
 
+  formatDate = date => {
+    var d = new Date(date),
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
+    return [year, month, day].join("-");
+  };
+
+  componentDidMount() {
+    const currentDate = new Date();
+    const to_date = this.formatDate(currentDate);
+    currentDate.setDate(currentDate.getDate() - 30);
+    const from_date = this.formatDate(currentDate);
+    this.setState(
+      {
+        from_date,
+        to_date
+      },
+      () => {
+        this.props.fetchAttendance(from_date, to_date);
+      }
+    );
+  }
+
   changeFromDate = e => {
     this.setState({
       from_date: e.target.value
@@ -31,10 +59,10 @@ class Dashboard extends Component {
     const { from_date, to_date } = this.state;
     var datesSelected = true;
 
-    if (from_date == undefined) {
+    if (from_date == undefined || from_date === "") {
       datesSelected = false;
     }
-    if (to_date == undefined) {
+    if (to_date == undefined || to_date == "") {
       datesSelected = false;
     }
 
@@ -49,7 +77,7 @@ class Dashboard extends Component {
 
   render() {
     const { auth } = this.props;
-    const { error } = this.state;
+    const { error, from_date, to_date } = this.state;
     return (
       <div>
         {auth && (
@@ -60,7 +88,8 @@ class Dashboard extends Component {
                 position: "fixed",
                 top: "0",
                 width: "100%",
-                height: "4rem"
+                height: "4rem",
+                zIndex: 1
               }}
             >
               <span className="navbar-brand">{auth.user.EmpName}</span>
@@ -76,7 +105,7 @@ class Dashboard extends Component {
                   className="btn btn-light my-2 my-sm-0"
                   onClick={this.logOut}
                 >
-                  Log out
+                  <i className="material-icons">exit_to_app</i>
                 </button>
               </span>
             </nav>
@@ -107,11 +136,12 @@ class Dashboard extends Component {
                   className="vcenter"
                   style={{ height: "3em", margin: "1rem" }}
                 >
-                  <span style={{ margin: ".5rem" }}>From:</span>
+                  <span style={{ margin: ".5rem" }}>From: </span>
                   <input
                     type="date"
                     onChange={this.changeFromDate}
                     className="date_picker"
+                    value={from_date}
                   />
                 </div>
                 <div
@@ -123,6 +153,7 @@ class Dashboard extends Component {
                     type="date"
                     onChange={this.changeToDate}
                     className="date_picker"
+                    value={to_date}
                   />
                 </div>
                 <div
@@ -130,17 +161,11 @@ class Dashboard extends Component {
                   style={{ marginLeft: "50px", height: "10em" }}
                 >
                   <button
-                    className="btn btn-danger"
+                    className="btn btn-light"
                     onClick={this.fetchAttendance}
                   >
-                    Refresh
+                    <i className="material-icons">refresh</i>
                   </button>
-                </div>
-                <div
-                  className="vcenter"
-                  style={{ marginLeft: "50px", height: "10em" }}
-                >
-                  {error && <p className="text-danger">{error}</p>}
                 </div>
               </div>
             </div>

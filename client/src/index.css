@@ -45,6 +45,7 @@ button {
 }
 
 .date_picker {
+  font-family: "Nunito";
   padding: 0.2rem;
   border: 2px solid #eee;
   border-radius: 2px;
@@ -60,4 +61,125 @@ button {
   display: inline-block;
   vertical-align: middle;
   float: none;
+}
+
+.notification-container {
+  position: fixed;
+  bottom: 20px;
+  transition: top 0.5s ease;
+  width: 100%;
+  height: 5rem;
+  text-align: center;
+}
+
+.notification-box {
+  user-select: none;
+  background-color: #fff;
+  display: inline;
+  padding: 15px;
+
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+.btn-icon {
+  width: 1rem;
+  height: 1rem;
+  padding: 0.5rem;
+  border: none;
+  outline: none;
+  background: white;
+}
+
+.btn-icon > i {
+  outline: none;
+}
+
+.calendar-cell {
+  position: relative;
+  display: inline-block;
+
+  border-radius: 2px;
+  margin: 1px;
+  width: 7rem;
+  height: 7rem;
+  padding: 0.5rem;
+  background: rgb(240, 240, 240);
+  cursor: pointer;
+}
+
+.status {
+  position: absolute;
+  top: 5px;
+  left: 10px;
+}
+
+.date-of-month {
+  position: absolute;
+  bottom: 5px;
+}
+
+.attendance-list {
+  padding: 2rem;
+}
+
+.weekend {
+  background: rgb(145, 145, 145);
+}
+
+.weekend * {
+  color: white;
+}
+
+.absent {
+  background: #d9534f;
+}
+
+.absent * {
+  color: white;
+}
+
+.yellow {
+  background: rgb(238, 235, 39);
+}
+
+.yellow * {
+  color: white;
+}
+
+.navbar {
+  z-index: 1 !important;
+}
+
+.tooltip {
+  z-index: 5 !important;
+  opacity: 0;
+  transition: all 0.2s ease-out;
+  position: absolute;
+  top: 7rem;
+  left: -22%;
+  background: linear-gradient(
+    to bottom right,
+    rgb(22, 162, 255),
+    rgb(22, 115, 255)
+  );
+  padding: 5px;
+}
+
+.tooltip * {
+  color: white;
+}
+
+.calendar-cell:hover .tooltip {
+  opacity: 1;
+  top: -5.5rem;
+
+  width: 10rem;
+  height: 5rem;
+
+  border-radius: 5px;
+}
+
+.tooltip span {
+  display: block;
 }

@@ -1,10 +1,76 @@
 import React from "react";
 import { connect } from "react-redux";
 
+const daysOfWeek = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday"
+];
+
+const months = [
+  "Jan",
+  "Feb",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "Sept",
+  "Oct",
+  "Nov",
+  "Dec"
+];
+
 const AttendanceList = ({ attendance }) => {
   return (
-    <div>
-      {attendance && attendance.map(att => <p>{JSON.stringify(att)}</p>)}
+    <div className="attendance-list">
+      {attendance &&
+        attendance.map((att, index) => {
+          const date = new Date(att.AttendanceDate);
+          const day = date.getDay();
+          const dayOfWeek = daysOfWeek[day];
+          const dateOfMonth = date.getDate();
+          const month = months[date.getMonth()];
+          var classToSet = "";
+          if (dayOfWeek != "Sunday" && dayOfWeek != "Saturday") {
+            if (numHours < 5) {
+              classToSet = "yellow";
+            }
+          }
+          if (dayOfWeek == "Sunday" || dayOfWeek == "Saturday") {
+            classToSet = "weekend";
+          } else {
+            if (att.Status == "A") {
+              classToSet = "absent";
+            }
+          }
+
+          const totalTime = att.TotalTime;
+
+          var numHours = parseInt(totalTime.split(":")[0]);
+
+          classToSet = "calendar-cell " + classToSet;
+
+          return (
+            <span className={classToSet}>
+              <span className="date-of-month">
+                {dateOfMonth} {month}
+              </span>
+              <span className="status">{att.Status}</span>
+              <span className="tooltip">
+                <span className="intime">In time: {att.InTime}</span>
+                <span className="outtime">Out time: {att.OutTime}</span>
+
+                <span className="totaltime">Total time: {att.TotalTime}</span>
+              </span>
+            </span>
+          );
+        })}
     </div>
   );
 };

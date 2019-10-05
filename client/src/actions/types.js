@@ -10,3 +10,4 @@ export const SET_ERRORS = "SET_ERRORS";
 
 // EMPLOYEE ACTIONS
 export const FETCH_ATTENDANCE = "FETCH_ATTENDANCE";
+export const CLEAR_DATA = "CLEAR_DATA";

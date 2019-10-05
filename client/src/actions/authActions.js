@@ -7,7 +7,8 @@ import {
   LOADING_USER,
   SET_ERRORS,
   LOGINGIN_USER,
-  LOGOUT_USER
+  LOGOUT_USER,
+  CLEAR_DATA
 } from "./types";
 import axios from "axios";
 import jwtdecode from "jwt-decode";
@@ -75,5 +76,6 @@ export const changePassword = (
 export const logOutUser = history => dispatch => {
   localStorage.removeItem("token");
   dispatch({ type: LOGOUT_USER });
+  dispatch({ type: CLEAR_DATA });
   history.push("/");
 };
