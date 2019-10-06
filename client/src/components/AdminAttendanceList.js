@@ -26,7 +26,7 @@ const months = [
   "Dec"
 ];
 
-const AttendanceList = ({ attendance }) => {
+const AdminAttendanceList = ({ attendance }) => {
   return (
     <div className="attendance-list">
       {attendance &&
@@ -37,8 +37,8 @@ const AttendanceList = ({ attendance }) => {
           const dateOfMonth = date.getDate();
           const month = months[date.getMonth()];
           const totalTime = att.TotalTime;
-          var numHours = parseInt(totalTime.split(":")[0]);
 
+          var numHours = parseInt(totalTime.split(":")[0]);
           var classToSet = "";
           if (dayOfWeek !== "Sunday" && dayOfWeek !== "Saturday") {
             if (numHours < 5) {
@@ -56,7 +56,7 @@ const AttendanceList = ({ attendance }) => {
           classToSet = "calendar-cell " + classToSet;
 
           return (
-            <span className={classToSet}>
+            <span className={classToSet} key={index}>
               <span className="date-of-month">
                 {dateOfMonth} {month}
               </span>
@@ -76,11 +76,11 @@ const AttendanceList = ({ attendance }) => {
 
 const mapStateToProps = state => {
   return {
-    attendance: state.employee.attendance
+    attendance: state.admin.attendance
   };
 };
 
 export default connect(
   mapStateToProps,
   null
-)(AttendanceList);
+)(AdminAttendanceList);

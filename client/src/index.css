@@ -183,3 +183,78 @@ button {
 .tooltip span {
   display: block;
 }
+
+.wrapper {
+  display: flex;
+  width: 100%;
+}
+
+#sidebar {
+  width: 15%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 999;
+  background: #d9534f;
+  color: #fff;
+  transition: all 0.3s;
+
+  padding-top: 1rem;
+}
+
+.sidebar-header p {
+  font-size: 1.5rem;
+  padding-left: 1rem;
+}
+
+.admin-links * {
+  color: white;
+  text-decoration: none;
+}
+
+.admin-links *:hover {
+  color: white;
+  text-decoration: none;
+}
+
+.components li,
+a {
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.admin-links {
+  padding-left: 1rem;
+}
+
+.employee-code-navbar {
+  padding: 0.2rem;
+  border-bottom: 2px solid #eee;
+  padding-left: 1rem;
+}
+
+.dropdown-arrow {
+  margin-top: 0.2rem;
+}
+
+.admin-content {
+  padding: 1rem;
+  position: absolute;
+  left: 15%;
+  top: 0px;
+  height: 100%;
+  width: 85%;
+}
+
+.search-result {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2.5rem;
+}
+
+.search-result * {
+  margin: 0;
+}

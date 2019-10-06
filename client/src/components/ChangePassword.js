@@ -14,7 +14,7 @@ class ChangePassword extends Component {
   };
 
   componentDidUpdate(prevProps, prevState, snap) {
-    if (prevProps.errors != this.props.errors) {
+    if (prevProps.errors !== this.props.errors) {
       this.setState({ errors: this.props.errors });
     }
   }

@@ -2,7 +2,6 @@ import {
   SET_CURRENT_USER,
   LOGINGIN_USER,
   LOGIN_USER,
-  REGISTER_USER,
   LOGOUT_USER,
   SET_ERRORS
 } from "../actions/types";
@@ -27,13 +26,11 @@ export default function(state = initialState, action) {
     case LOGIN_USER:
       return action.payload;
 
-    case REGISTER_USER:
-
     case SET_CURRENT_USER:
       return {
         ...state,
         isAuthenticated: true,
-        isAdmin: action.payload.Access == "admin" ? true : false,
+        isAdmin: (action.payload.Access = "admin" ? true : false),
         user: action.payload,
         loading: false
       };

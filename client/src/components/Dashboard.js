@@ -59,10 +59,10 @@ class Dashboard extends Component {
     const { from_date, to_date } = this.state;
     var datesSelected = true;
 
-    if (from_date == undefined || from_date === "") {
+    if (from_date === undefined || from_date === "") {
       datesSelected = false;
     }
-    if (to_date == undefined || to_date == "") {
+    if (to_date === undefined || to_date === "") {
       datesSelected = false;
     }
 
@@ -77,7 +77,7 @@ class Dashboard extends Component {
 
   render() {
     const { auth } = this.props;
-    const { error, from_date, to_date } = this.state;
+    const { from_date, to_date } = this.state;
     return (
       <div>
         {auth && (

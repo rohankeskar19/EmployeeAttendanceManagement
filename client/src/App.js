@@ -12,7 +12,6 @@ import store from "./store";
 import { LOGOUT_USER, LOGIN_USER } from "./actions/types";
 import EmployeeRoutes from "./components/EmployeeRoutes";
 import AdminRoutes from "./components/AdminRoutes";
-import Notification from "./components/Notification";
 
 class App extends Component {
   componentDidMount() {
@@ -25,10 +24,10 @@ class App extends Component {
         const payload = {};
         payload.user = decoded;
         payload.isAuthenticated = true;
-        payload.isAdmin = decoded.Access == "admin" ? true : false;
+        payload.isAdmin = decoded.Access === "admin" ? true : false;
         setAuthToken(token);
         store.dispatch({ type: LOGIN_USER, payload: payload });
-        if (decoded.Access == "admin") {
+        if (decoded.Access === "admin") {
           this.props.history.push("/admin");
         } else {
           this.props.history.push("/dashboard");
@@ -54,7 +53,6 @@ class App extends Component {
           <EmployeeRoutes path="/dashboard" component={Dashboard} exact />
           <AdminRoutes path="/admin" component={Admin} exact />
         </Switch>
-        {/* <Notification /> */}
       </div>
     );
   }

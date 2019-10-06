@@ -38,7 +38,9 @@ Router.post("/register", authentication.isAdmin, (req, res) => {
             con.query(checkUserExists, (err, result) => {
               if (!err) {
                 if (result.length > 0) {
-                  return res.status(409).json({ error: "User already exists" });
+                  return res
+                    .status(409)
+                    .json({ employee_code: "User already exists" });
                 } else {
                   var sql = "";
                   if (access != undefined)

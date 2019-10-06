@@ -1,10 +1,5 @@
 import {
-  SET_CURRENT_USER,
   LOGIN_USER,
-  CLEAR_USER,
-  REGISTER_USER,
-  SIGNOUT_USER,
-  LOADING_USER,
   SET_ERRORS,
   LOGINGIN_USER,
   LOGOUT_USER,
@@ -12,6 +7,7 @@ import {
 } from "./types";
 import axios from "axios";
 import jwtdecode from "jwt-decode";
+import setAuthToken from "../helpers/setAuthToken";
 
 export const loginUser = (loginData, history) => dispatch => {
   const { employee_code, password } = loginData;
@@ -26,6 +22,7 @@ export const loginUser = (loginData, history) => dispatch => {
       const { token } = res.data;
 
       localStorage.setItem("token", token);
+      setAuthToken(token);
 
       const decoded = jwtdecode(token);
 
@@ -33,7 +30,7 @@ export const loginUser = (loginData, history) => dispatch => {
 
       payload.isAuthenticated = true;
 
-      if (decoded.Access == "admin") {
+      if (decoded.Access === "admin") {
         payload.isAdmin = true;
       } else {
         payload.isAdmin = false;
@@ -75,7 +72,9 @@ export const changePassword = (
 
 export const logOutUser = history => dispatch => {
   localStorage.removeItem("token");
+  setAuthToken();
   dispatch({ type: LOGOUT_USER });
   dispatch({ type: CLEAR_DATA });
+
   history.push("/");
 };
