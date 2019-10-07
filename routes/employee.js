@@ -20,6 +20,7 @@ Router.get("/attendance", authentication.isAuthenticated, (req, res) => {
         const sql = `SELECT * FROM attendance where EmpCode = '${req.user.EmpCode}' AND AttendanceDate >= '${from_date}' AND AttendanceDate <= '${to_date}'`;
 
         con.query(sql, (err, result) => {
+          con.release();
           if (!err) {
             const response = [];
 
@@ -43,7 +44,6 @@ Router.get("/attendance", authentication.isAuthenticated, (req, res) => {
           .status(500)
           .json({ error: "Failed to process request try again" });
       }
-      con.release();
     });
   }
 });

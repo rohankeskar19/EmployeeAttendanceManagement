@@ -56,7 +56,7 @@ const AttendanceList = ({ attendance }) => {
           classToSet = "calendar-cell " + classToSet;
 
           return (
-            <span className={classToSet}>
+            <span className={classToSet} key={index}>
               <span className="date-of-month">
                 {dateOfMonth} {month}
               </span>

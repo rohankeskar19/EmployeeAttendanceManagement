@@ -121,6 +121,7 @@ button {
 
 .attendance-list {
   padding: 2rem;
+  overflow-y: scroll;
 }
 
 .weekend {
@@ -257,4 +258,14 @@ a {
 
 .search-result * {
   margin: 0;
+}
+
+.employee-item {
+  width: 50%;
+  background-color: #eee;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
 }

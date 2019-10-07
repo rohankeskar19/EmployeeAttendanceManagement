@@ -18,19 +18,21 @@ class Admin extends Component {
     employee_name: "",
     password: "",
     local_errors: {},
-    showEmployees: false,
+
     from_date: "",
     to_date: "",
     currentEmployee: ""
   };
 
-  setPage = (page, employee_code) => {
+  setPage = page => {
+    if (page == 3) {
+      this.props.fetchEmployees();
+    }
     this.setState({
       currentPage: page,
       employee_code: "",
       employee_name: "",
-      password: "",
-      currentEmployee: employee_code
+      password: ""
     });
   };
 
@@ -72,14 +74,6 @@ class Admin extends Component {
       from_date,
       to_date
     });
-  }
-
-  componentDidUpdate() {
-    const { auth } = this.props;
-
-    if (auth.isAuthenticated) {
-      this.props.fetchEmployees();
-    }
   }
 
   handleAddEmployeeSubmit = e => {
@@ -139,8 +133,20 @@ class Admin extends Component {
 
   fetchEmployeeAttendance = () => {
     const { from_date, to_date, currentEmployee } = this.state;
-    console.log("calling1", currentEmployee);
+    console.log(currentEmployee);
     this.props.fetchAttendance(from_date, to_date, currentEmployee);
+  };
+
+  viewAttendance = employee_code => {
+    this.setState(
+      {
+        currentEmployee: employee_code
+      },
+      () => {
+        this.fetchEmployeeAttendance();
+        this.setPage(1);
+      }
+    );
   };
 
   getContent = () => {
@@ -151,16 +157,16 @@ class Admin extends Component {
       employee_name,
       password,
       from_date,
-      to_date,
-      currentEmployee
+      to_date
     } = this.state;
     const { admin } = this.props;
     const { searchedEmployee, errors } = admin;
+    const { totalWorkingTime } = admin;
 
     switch (currentPage) {
       case 0:
         return (
-          <div>
+          <div className="view-container">
             <form onSubmit={this.handleSearchEmployeeSubmit}>
               <div className="form-group">
                 <input
@@ -198,7 +204,6 @@ class Admin extends Component {
         );
 
       case 1:
-        this.props.fetchAttendance(from_date, to_date, currentEmployee);
         return (
           <div>
             <div
@@ -219,10 +224,11 @@ class Admin extends Component {
                 position: "fixed",
                 bottom: "0",
                 width: "100%",
-                height: "5rem",
+                height: "8rem",
                 padding: ".5rem"
               }}
             >
+              <p>Total working time : {totalWorkingTime}</p>
               <div className="row">
                 <div
                   className="vcenter"
@@ -266,11 +272,11 @@ class Admin extends Component {
       case 2:
         return (
           <form onSubmit={this.handleAddEmployeeSubmit}>
-            <div class="form-group">
+            <div className="form-group">
               <label htmlFor="employee_code">Employee Code.</label>
               <input
                 type="text"
-                class="form-control"
+                className="form-control"
                 id="employee_code"
                 placeholder="Enter employee code"
                 name="employee_code"
@@ -286,11 +292,11 @@ class Admin extends Component {
                 <small className="text-danger">{errors.employee_code}</small>
               )}
             </div>
-            <div class="form-group">
-              <label for="employee_name">Employee Name</label>
+            <div className="form-group">
+              <label htmlFor="employee_name">Employee Name</label>
               <input
                 type="text"
-                class="form-control"
+                className="form-control"
                 id="employee_name"
                 name="employee_name"
                 placeholder="Enter employee name"
@@ -306,11 +312,11 @@ class Admin extends Component {
                 <small className="text-danger">{errors.employee_name}</small>
               )}
             </div>
-            <div class="form-group">
-              <label for="password">Password</label>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
               <input
                 type="password"
-                class="form-control"
+                className="form-control"
                 id="password"
                 name="password"
                 placeholder=" Set password"
@@ -325,11 +331,26 @@ class Admin extends Component {
               )}
             </div>
 
-            <button type="submit" class="btn btn-danger">
+            <button type="submit" className="btn btn-danger">
               Add user
             </button>
           </form>
         );
+      case 3:
+        const { employees } = admin;
+        return (
+          employees &&
+          employees.map(employee => (
+            <div
+              key={employee.EmpCode}
+              className="employee-item"
+              onClick={() => this.viewAttendance(employee.EmpCode)}
+            >
+              <p>{employee.EmpCode}</p>
+            </div>
+          ))
+        );
+
       default:
         break;
     }
@@ -369,24 +390,8 @@ class Admin extends Component {
                 Add admin
               </p>
             </li>
-            <li onClick={this.toggleEmployees} className="admin-links">
-              <p>
-                Employees{" "}
-                <i className="material-icons dropdown-arrow">
-                  keyboard_arrow_down
-                </i>
-              </p>
-              <div style={{ display: showEmployees ? "block" : "none" }}>
-                {employees &&
-                  employees.map(employee => (
-                    <p
-                      onClick={() => this.setPage(1, employee.EmpCode)}
-                      key={employee.EmpCode}
-                    >
-                      {employee.EmpCode}
-                    </p>
-                  ))}
-              </div>
+            <li onClick={() => this.setPage(3)} className="admin-links">
+              <p>Employees</p>
             </li>
             <li onClick={() => this.setPage(2)} className="admin-links">
               <p>Add employee</p>

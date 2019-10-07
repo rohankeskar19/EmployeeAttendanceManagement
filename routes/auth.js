@@ -36,6 +36,7 @@ Router.post("/register", authentication.isAdmin, (req, res) => {
             var checkUserExists = `SELECT * FROM employees WHERE EmpCode = '${employee_code}'`;
 
             con.query(checkUserExists, (err, result) => {
+              con.release();
               if (!err) {
                 if (result.length > 0) {
                   return res
@@ -67,7 +68,6 @@ Router.post("/register", authentication.isAdmin, (req, res) => {
                   .status(500)
                   .json({ error: "Failed to process request try again" });
               }
-              con.release();
             });
           }
         });
@@ -95,8 +95,9 @@ Router.post("/login", (req, res) => {
     pool.getConnection((err, con) => {
       if (!err) {
         const sql = `SELECT * FROM employees where EmpCode = '${employee_code}'`;
-
+        console.log(sql);
         con.query(sql, (err, result) => {
+          con.release();
           if (err) {
             return res
               .status(500)
@@ -112,7 +113,7 @@ Router.post("/login", (req, res) => {
                 if (!err) {
                   if (match) {
                     delete employeeData["Password"];
-                    console.log(employeeData);
+                    console.log(employeeData, "ola");
                     jsonwebtoken.sign(
                       employeeData,
                       config.secret,
@@ -121,6 +122,7 @@ Router.post("/login", (req, res) => {
                       },
                       (err, token) => {
                         if (!err) {
+                          console.log("response sent login");
                           return res.json({
                             auth: true,
                             token: "Bearer " + token
@@ -134,6 +136,7 @@ Router.post("/login", (req, res) => {
                       }
                     );
                   } else {
+                    console.log(err);
                     return res
                       .status(401)
                       .json({ password: "Passwords do not match" });
@@ -147,7 +150,6 @@ Router.post("/login", (req, res) => {
               });
             }
           }
-          con.release();
         });
       } else {
         return res
@@ -179,6 +181,7 @@ Router.post("/change-password", (req, res) => {
         const sql = `SELECT * FROM employees WHERE EmpCode = '${employee_code}'`;
 
         con.query(sql, (err, result) => {
+          con.release();
           if (!err) {
             if (result.length > 0) {
               var employeeData = {};

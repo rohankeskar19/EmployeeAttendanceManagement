@@ -30,6 +30,7 @@ Router.get("/fetch-attendance", authentication.isAdmin, (req, res) => {
         const sql = `SELECT * FROM attendance WHERE AttendanceDate >= '${from_date}' AND AttendanceDate <= '${to_date}' AND EmpCode = '${employee_code}'`;
 
         con.query(sql, (err, result) => {
+          con.release();
           if (!err) {
             const response = [];
             for (var i = 0; i < result.length; i++) {
@@ -41,6 +42,7 @@ Router.get("/fetch-attendance", authentication.isAdmin, (req, res) => {
 
               response.push(result[i]);
             }
+            console.log(response);
             return res.json(response);
           } else {
             console.log(err);
@@ -54,7 +56,6 @@ Router.get("/fetch-attendance", authentication.isAdmin, (req, res) => {
           .status(500)
           .json({ error: "Failed to process request try again" });
       }
-      con.release();
     });
   }
 });
@@ -65,7 +66,7 @@ Router.get("/fetch-attendance", authentication.isAdmin, (req, res) => {
 // Params: employee_code
 Router.get("/search-employees", authentication.isAdmin, (req, res) => {
   const { employee_code } = req.query;
-
+  console.log(employee_code);
   const errors = adminValidator.validateEmployeeCode(employee_code);
 
   if (Object.keys(errors).length > 0) {
@@ -79,11 +80,13 @@ Router.get("/search-employees", authentication.isAdmin, (req, res) => {
           const sql = `SELECT EmpCode,EmpName,Access FROM employees WHERE EmpCode = '${employee_code}'`;
 
           con.query(sql, (err, result) => {
+            con.release();
             if (!err) {
               if (result.length > 0) {
                 var employeeData = {};
                 Object.assign(employeeData, result[0]);
-                delete employeeData["Password"];
+
+                console.log("response sent search employee");
                 return res.json(employeeData);
               } else {
                 return res.status(404).json({ error: "User does not exists" });
@@ -99,7 +102,6 @@ Router.get("/search-employees", authentication.isAdmin, (req, res) => {
             .status(500)
             .json({ error: "Failed to process request try again" });
         }
-        con.release();
       });
     }
   }
@@ -118,6 +120,7 @@ Router.put("/add-admin", authentication.isAdmin, (req, res) => {
     return res.status(400).json(errors);
   } else {
     pool.getConnection((err, con) => {
+      con.release();
       if (!err) {
         const sql = `UPDATE employees SET Access = 'admin' WHERE EmpCode = '${employee_code}'`;
 
@@ -135,8 +138,6 @@ Router.put("/add-admin", authentication.isAdmin, (req, res) => {
           .status(500)
           .json({ error: "Failed to process request try again" });
       }
-
-      con.release();
     });
   }
 });
@@ -151,6 +152,7 @@ Router.get("/fetch-employees", authentication.isAdmin, (req, res) => {
       const sql = `SELECT EmpCode,EmpName,Access FROM employees`;
 
       con.query(sql, (err, result) => {
+        con.release();
         if (!err) {
           if (result.length > 0) {
             const employees = [];
@@ -176,7 +178,6 @@ Router.get("/fetch-employees", authentication.isAdmin, (req, res) => {
         .status(500)
         .json({ error: "Failed to process request try again" });
     }
-    con.release();
   });
 });
 

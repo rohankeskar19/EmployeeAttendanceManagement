@@ -9,6 +9,7 @@ import {
 import axios from "axios";
 
 export const searchEmployee = employee_code => dispatch => {
+  console.log(employee_code);
   axios
     .get(`/api/admin/search-employees?employee_code=${employee_code}`)
     .then(res => {
@@ -72,10 +73,42 @@ export const fetchAttendance = (
       `/api/admin/fetch-attendance?from_date=${from_date}&to_date=${to_date}&employee_code=${employee_code}`
     )
     .then(res => {
-      dispatch({ type: FETCH_SINGLE_ATTENDANCE, payload: res.data });
+      const attendance = res.data;
+      var totalWorkingTime = 0;
+      var totalHours = 0;
+      var totalMinutes = 0;
+      attendance.forEach(a => {
+        const totalTime = a.TotalTime;
+        totalHours += parseInt(totalTime.split(":")[0]);
+        totalMinutes += parseInt(totalTime.split(":")[1]);
+      });
+
+      totalMinutes += totalHours * 60;
+
+      totalWorkingTime = getHour(totalMinutes);
+
+      const payload = {
+        attendance: res.data,
+        totalWorkingTime
+      };
+      dispatch({ type: FETCH_SINGLE_ATTENDANCE, payload });
     })
     .catch(err => {
       console.log(err);
       dispatch({ type: SET_ADMIN_ERRORS, payload: err.response.data });
     });
 };
+
+function getHour(value) {
+  if (value == null) {
+    return "";
+  }
+  if (value <= 0) {
+    return "";
+  }
+  var hours = Math.floor(value / 60);
+  var minutes = value % 60;
+  var hour = hours > 1 ? hours : hours;
+  var min = minutes > 0 ? minutes : "";
+  return hour + ":" + min;
+}

@@ -13,7 +13,8 @@ const initialState = {
   errors: {},
   searchedEmployee: null,
   employees: [],
-  attendance: []
+  attendance: [],
+  totalWorkingTime: 0
 };
 
 export default function(state = initialState, action) {
@@ -30,11 +31,10 @@ export default function(state = initialState, action) {
         employees: employees.concat(action.payload)
       };
     case FETCH_SINGLE_ATTENDANCE:
-      //   const state1 = state;
-      //   state1.attendance = action.payload;
       return {
         ...state,
-        attendance: action.payload
+        attendance: action.payload.attendance,
+        totalWorkingTime: action.payload.totalWorkingTime
       };
     case SEARCH_EMPLOYEE:
       return {

@@ -4,7 +4,7 @@
   "description": "An employee attendance management app for danfoss",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon server.js",
+    "server": "nodemon server.js --ignore './client/'",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },

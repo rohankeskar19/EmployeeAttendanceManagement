@@ -141,7 +141,7 @@ class Dashboard extends Component {
                     type="date"
                     onChange={this.changeFromDate}
                     className="date_picker"
-                    value={from_date}
+                    value={from_date == null || undefined ? "" : from_date}
                   />
                 </div>
                 <div
@@ -153,7 +153,7 @@ class Dashboard extends Component {
                     type="date"
                     onChange={this.changeToDate}
                     className="date_picker"
-                    value={to_date}
+                    value={to_date == null || undefined ? "" : to_date}
                   />
                 </div>
                 <div
