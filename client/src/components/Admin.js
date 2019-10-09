@@ -159,12 +159,14 @@ class Admin extends Component {
       from_date,
       to_date
     } = this.state;
-    const { admin } = this.props;
+    const { admin, auth } = this.props;
     const { searchedEmployee, errors } = admin;
     const { totalWorkingTime } = admin;
 
     switch (currentPage) {
       case 0:
+         
+      
         return (
           <div className="view-container">
             <form onSubmit={this.handleSearchEmployeeSubmit}>
@@ -182,11 +184,11 @@ class Admin extends Component {
                   </small>
                 )}
                 {errors && (
-                  <small className="text-danger">{errors.employee_code}</small>
+                  <small className="text-danger">{errors.error}</small>
                 )}
               </div>
             </form>
-            {searchedEmployee && (
+            {searchedEmployee && searchEmployee.EmpCode !== auth.user.EmpCode && (
               <div className="search-result">
                 <p>
                   {searchedEmployee.EmpCode} {searchedEmployee.EmpName}{" "}

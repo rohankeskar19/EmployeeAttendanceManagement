@@ -14,10 +14,11 @@ export const searchEmployee = employee_code => dispatch => {
     .get(`/api/admin/search-employees?employee_code=${employee_code}`)
     .then(res => {
       const employeeData = res.data;
-
+      console.log(res.data);
       dispatch({ type: SEARCH_EMPLOYEE, payload: employeeData });
     })
     .catch(err => {
+      console.log(err.response.data);
       dispatch({ type: SET_ADMIN_ERRORS, payload: err.response.data });
     });
 };
@@ -110,5 +111,5 @@ function getHour(value) {
   var minutes = value % 60;
   var hour = hours > 1 ? hours : hours;
   var min = minutes > 0 ? minutes : "";
-  return hour + ":" + min;
+  return hour + " h " + min + " m";
 }

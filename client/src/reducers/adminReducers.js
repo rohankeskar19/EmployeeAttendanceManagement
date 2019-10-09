@@ -39,6 +39,7 @@ export default function(state = initialState, action) {
     case SEARCH_EMPLOYEE:
       return {
         ...state,
+        errors: {error: ""},
         searchedEmployee: action.payload
       };
 
@@ -50,7 +51,8 @@ export default function(state = initialState, action) {
     case SET_ADMIN_ERRORS:
       return {
         ...state,
-        errors: action.payload
+        errors: action.payload,
+        searchedEmployee: null
       };
     case CLEAR_DATA:
       return initialState;

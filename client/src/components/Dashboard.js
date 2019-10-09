@@ -76,7 +76,7 @@ class Dashboard extends Component {
   };
 
   render() {
-    const { auth } = this.props;
+    const { auth, employee } = this.props;
     const { from_date, to_date } = this.state;
     return (
       <div>
@@ -116,21 +116,24 @@ class Dashboard extends Component {
                 height: "85%",
                 position: "fixed",
                 top: "4rem",
-                overflowY: "scroll"
+                
               }}
             >
               <AttendanceList />
             </div>
+            
             <div
               className="datePicker"
               style={{
                 position: "fixed",
                 bottom: "0",
                 width: "100%",
-                height: "5rem",
-                padding: ".5rem"
+                height: "8rem",
+                padding: ".5rem",
+                
               }}
             >
+              <p>Total working time: {employee.totalWorkingTime}</p>
               <div className="row">
                 <div
                   className="vcenter"
@@ -178,7 +181,8 @@ class Dashboard extends Component {
 
 const mapStateToProps = state => {
   return {
-    auth: state.auth
+    auth: state.auth,
+    employee: state.employee
   };
 };
 
