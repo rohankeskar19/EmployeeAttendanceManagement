@@ -200,7 +200,7 @@ for (sheet in wb.Sheets) {
         for (var j = 0; j < dates.length; j++) {
           var sql = `INSERT INTO attendance values ('${EmpCode}','${Status[j]}','${InTime[j]}','${OutTime[j]}','${TotalTime[j]}','${dates[j]}')`;
           con.query(sql, (err, result) => {
-            if (err) console.log(err);
+            //if (err) console.log(err);
           });
         }
       }
