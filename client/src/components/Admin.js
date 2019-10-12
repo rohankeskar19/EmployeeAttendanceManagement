@@ -208,6 +208,7 @@ class Admin extends Component {
       case 1:
         return (
           <div>
+            
             <div
               className="attendanceView"
               style={{
@@ -230,7 +231,7 @@ class Admin extends Component {
                 padding: ".5rem"
               }}
             >
-              <p>Total working time : {totalWorkingTime}</p>
+              
               <div className="row">
                 <div
                   className="vcenter"
@@ -269,6 +270,7 @@ class Admin extends Component {
                 </div>
               </div>
             </div>
+            
           </div>
         );
       case 2:

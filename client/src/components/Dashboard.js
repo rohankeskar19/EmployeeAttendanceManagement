@@ -110,30 +110,17 @@ class Dashboard extends Component {
               </span>
             </nav>
             <div
-              className="attendanceView"
-              style={{
-                width: "100%",
-                height: "85%",
-                position: "fixed",
-                top: "4rem",
-                
-              }}
-            >
-              <AttendanceList />
-            </div>
-            
-            <div
               className="datePicker"
               style={{
                 position: "fixed",
-                bottom: "0",
+                top: "5rem",
                 width: "100%",
                 height: "8rem",
                 padding: ".5rem",
                 
               }}
             >
-              <p>Total working time: {employee.totalWorkingTime}</p>
+             
               <div className="row">
                 <div
                   className="vcenter"
@@ -172,6 +159,20 @@ class Dashboard extends Component {
                 </div>
               </div>
             </div>
+            <div
+              className="attendanceView"
+              style={{
+                width: "100%",
+                height: "85%",
+                position: "fixed",
+                top: "9rem",
+                
+              }}
+            >
+              <AttendanceList />
+            </div>
+            <p style={{position: "fixed", bottom: "10px", left: "15px"}}>Total working time: {employee.totalWorkingTime}</p>
+            
           </div>
         )}
       </div>

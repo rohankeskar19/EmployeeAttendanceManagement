@@ -99,24 +99,30 @@ button {
   position: relative;
   display: inline-block;
 
-  border-radius: 2px;
+  border-radius: 5px;
   margin: 1px;
   width: 7rem;
   height: 7rem;
   padding: 0.5rem;
-  background: rgb(240, 240, 240);
+  background: rgb(255, 255, 255);
+  border: 2px solid rgb(204, 204, 204);
   cursor: pointer;
+}
+
+.day-of-week {
+
 }
 
 .status {
   position: absolute;
-  top: 5px;
+  top: 40%;
   left: 10px;
 }
 
 .date-of-month {
   position: absolute;
   bottom: 5px;
+  font-size: .8rem
 }
 
 .attendance-list {
@@ -128,15 +134,23 @@ button {
 }
 
 .weekend {
-  background: rgb(145, 145, 145);
+  background: rgb(241, 241, 241);
 }
 
 .weekend * {
+  color: rgb(75, 75, 75);
+}
+
+.present {
+  background: rgb(42, 231, 42);
+}
+
+.present * {
   color: white;
 }
 
 .absent {
-  background: #d9534f;
+  background: #e45e5e;
 }
 
 .absent * {

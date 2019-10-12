@@ -52,6 +52,9 @@ const AdminAttendanceList = ({ attendance }) => {
               classToSet = "absent";
             }
           }
+          if(att.Status === "P"){
+            classToSet = "present"
+          }
 
           classToSet = "calendar-cell " + classToSet;
 
@@ -60,6 +63,7 @@ const AdminAttendanceList = ({ attendance }) => {
               <span className="date-of-month">
                 {dateOfMonth} {month}
               </span>
+              <span className="day-of-week">{dayOfWeek}</span>
               <span className="status">{att.Status}</span>
               <span className="tooltip">
                 <span className="intime">In time: {att.InTime}</span>
