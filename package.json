@@ -6,12 +6,15 @@
   "scripts": {
     "server": "nodemon server.js --ignore './client/'",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "windows": "SET NODE_ENV=production & node server_prod.js",
+    "linux": "NODE_ENV=production & node server_prod.js"
   },
   "author": "Rohan Keskar",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cross-env": "^6.0.3",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.17.1",
