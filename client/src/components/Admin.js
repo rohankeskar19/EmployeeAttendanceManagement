@@ -165,8 +165,6 @@ class Admin extends Component {
 
     switch (currentPage) {
       case 0:
-         
-      
         return (
           <div className="view-container">
             <form onSubmit={this.handleSearchEmployeeSubmit}>
@@ -208,7 +206,6 @@ class Admin extends Component {
       case 1:
         return (
           <div>
-            
             <div
               className="attendanceView"
               style={{
@@ -221,6 +218,9 @@ class Admin extends Component {
             >
               <AdminAttendanceList />
             </div>
+            <p style={{ position: "fixed", bottom: "140px", left: "350px" }}>
+              Total working time: {admin.totalWorkingTime}
+            </p>
             <div
               className="datePicker"
               style={{
@@ -231,7 +231,6 @@ class Admin extends Component {
                 padding: ".5rem"
               }}
             >
-              
               <div className="row">
                 <div
                   className="vcenter"
@@ -270,7 +269,6 @@ class Admin extends Component {
                 </div>
               </div>
             </div>
-            
           </div>
         );
       case 2:

@@ -52,8 +52,8 @@ const AdminAttendanceList = ({ attendance }) => {
               classToSet = "absent";
             }
           }
-          if(att.Status === "P"){
-            classToSet = "present"
+          if (att.Status === "P") {
+            classToSet = "present";
           }
 
           classToSet = "calendar-cell " + classToSet;
